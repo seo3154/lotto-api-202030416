@@ -42,6 +42,8 @@ dependencies {
 
 //	util
     implementation("net.datafaker:datafaker:2.1.0")
+
+    implementation ("org.springdoc:springdoc-openapi-ui:1.6.6")
 }
 
 tasks.withType<KotlinCompile> {

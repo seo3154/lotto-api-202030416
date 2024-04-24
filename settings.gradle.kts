@@ -1,1 +1,1 @@
-rootProject.name = "api-graphql-test"
+rootProject.name = "lotto-api-202030416"

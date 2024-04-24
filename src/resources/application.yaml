@@ -1,6 +1,6 @@
 spring:
   application:
-    name: api-graphql-test
+    name: lotto-api-202030416
   graphql:
     graphiql:
       enabled: true # graphiql? ?? ??? ?? ?? (localhost:8080/graphiql)

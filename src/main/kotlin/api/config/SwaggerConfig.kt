@@ -13,7 +13,7 @@ class SwaggerConfig {
     fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
             .select()
-            .apis(RequestHandlerSelectors.basePackage("api")) // "api"는 컨트롤러가 위치한 패키지를 지정합니다.
+            .apis(RequestHandlerSelectors.basePackage("lotto_api"))
             .paths(PathSelectors.any())
             .build()
     }
