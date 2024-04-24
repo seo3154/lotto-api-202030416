@@ -45,4 +45,8 @@ class PostResolver : GraphQLQueryResolver, GraphQLMutationResolver {
         }
         return null
     }
+
+    private fun TestDto(matchedNumbers: Int, isBonusMatched: Boolean, prize: String): TestDto {
+        TODO("Not yet implemented")
+    }
 }

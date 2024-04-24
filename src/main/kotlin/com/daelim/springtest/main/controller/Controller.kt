@@ -1,10 +1,11 @@
 package com.daelim.springtest.main.controller
 
-import com.daelim.springtest.main.api.model.dto.GameResult
 import com.daelim.springtest.main.api.model.dto.LottoNumbers
+import com.daelim.springtest.main.api.model.dto.TestDto
 import com.daelim.springtest.main.api.model.dto.WinningNumbers
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/lotto")
@@ -30,7 +31,7 @@ class LottoController {
     }
 
     @PostMapping("/result")
-    fun checkResult(@RequestBody numbers: LottoNumbers): ResponseEntity<GameResult> {
+    fun checkResult(@RequestBody numbers: LottoNumbers): ResponseEntity<TestDto> {
         val matchedNumbers = numbers.numbers.intersect(winningNumbers.numbers.dropLast(1)).count()
         val isBonusMatched = numbers.numbers.contains(winningNumbers.numbers.last())
         val prize = when {
@@ -41,6 +42,8 @@ class LottoController {
             matchedNumbers == 3 -> "5등"
             else -> "꽝"
         }
-        return ResponseEntity.ok(GameResult(matchedNumbers, isBonusMatched, prize))
+        // 여기서 ID를 생성하는 방법 중 하나로 UUID를 사용할 수 있습니다.
+        val testId = UUID.randomUUID().toString()
+        return ResponseEntity.ok(TestDto(testId, matchedNumbers, isBonusMatched, prize))
     }
 }

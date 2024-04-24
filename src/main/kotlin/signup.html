@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup Page</title>
+</head>
+<body>
+<h2>Signup Page</h2>
+<form id="signupForm">
+    Email: <input type="email" id="signupEmail" required><br>
+    Password: <input type="password" id="signupPassword" required><br>
+    <button type="button" onclick="signup()">Signup</button>
+</form>
+
+<script>
+    function signup() {
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        if (!localStorage.getItem(email)) {
+            localStorage.setItem(email, JSON.stringify({password: password}));
+            alert("Signup successful!");
+        } else {
+            alert("Email already exists!");
+        }
+    }
+</script>
+</body>
+</html>
