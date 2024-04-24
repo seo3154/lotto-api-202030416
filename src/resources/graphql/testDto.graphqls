@@ -1,13 +1,16 @@
-type Test {
-    id: ID!
-    age: Int!
-}
-
 type Query {
-findAllTests: [Test],
-findTestById(id: ID!): Test
+    findAllTests: [TestDto]
+    findTestById(id: String!): TestDto
 }
 
 type Mutation {
-createTest(userId: String): Test
+    createTest(matchedNumbers: Int!, isBonusMatched: Boolean!, prize: String!): TestDto
+    deleteAllTests: Boolean
+    updateTestResult(id: String!, matchedNumbers: Int!, isBonusMatched: Boolean!, prize: String!): TestDto
+}
+
+type TestDto {
+    matchedNumbers: Int
+    isBonusMatched: Boolean
+    prize: String
 }

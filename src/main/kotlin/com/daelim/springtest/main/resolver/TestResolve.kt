@@ -3,15 +3,11 @@ package com.daelim.springtest.main.resolver
 import com.daelim.springtest.main.api.model.dto.TestDto
 import graphql.kickstart.tools.GraphQLMutationResolver
 import graphql.kickstart.tools.GraphQLQueryResolver
-import net.datafaker.Faker
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class PostResolver : GraphQLQueryResolver, GraphQLMutationResolver {
     private val tests = mutableListOf<TestDto>()
-
-    val faker = Faker(Locale.KOREA)
 
     fun findAllTests(): List<TestDto> {
         return tests
@@ -21,12 +17,32 @@ class PostResolver : GraphQLQueryResolver, GraphQLMutationResolver {
         return tests.find { it.id == id }
     }
 
-    fun createTest(userId: String): TestDto {
-        val test = TestDto(
-            id = userId,
-            age = Random().nextInt(100)
+    fun createTest(matchedNumbers: Int, isBonusMatched: Boolean, prize: String): TestDto {
+        val newTest = TestDto(
+            matchedNumbers = matchedNumbers,
+            isBonusMatched = isBonusMatched,
+            prize = prize
         )
-        tests.add(test)
-        return test
+        tests.add(newTest)
+        return newTest
+    }
+
+    fun deleteAllTests(): Boolean {
+        tests.clear()
+        return true
+    }
+
+    fun updateTestResult(id: String, matchedNumbers: Int, isBonusMatched: Boolean, prize: String): TestDto? {
+        val index = tests.indexOfFirst { it.id == id }
+        if (index != -1) {
+            val updatedTest = TestDto(
+                matchedNumbers = matchedNumbers,
+                isBonusMatched = isBonusMatched,
+                prize = prize
+            )
+            tests[index] = updatedTest
+            return updatedTest
+        }
+        return null
     }
 }
