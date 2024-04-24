@@ -1,40 +1,62 @@
-package com.daelim.springtest.main.controller
-
-import com.daelim.springtest.main.api.model.dto.TestDto
-import com.daelim.springtest.main.api.model.dto.TestDtoRequest
-import net.datafaker.Faker
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.*
+
+@SpringBootApplication
+class LottoApiApplication
+
+fun main(args: Array<String>) {
+    runApplication<LottoApiApplication>(*args)
+}
+
+data class LottoNumbers(val numbers: List<Int>)
+
+data class WinningNumbers(val numbers: List<Int>)
+
+data class GameResult(
+    val matchedNumbers: Int,
+    val isBonusMatched: Boolean,
+    val prize: String
+)
+
+val savedNumbers = mutableListOf<LottoNumbers>()
+
+val winningNumbers = WinningNumbers(listOf(15, 16, 17, 25, 30, 31, 32))
 
 @RestController
-class Controller {
-    private val tests = mutableListOf<TestDto>()
+@RequestMapping("/lotto")
+class LottoController {
 
-    @PostMapping("/test")
-    fun postTestDto(
-        @RequestBody testDtoRequest: TestDtoRequest
-    ): ResponseEntity<TestDto> {
-        val faker = Faker(Locale.KOREA)
-        val test = TestDto(
-            id = faker.name().name(),
-            age = testDtoRequest.age
-        )
-        tests.add(test)
-        return ResponseEntity.ok().body(test)
-    }
-    @GetMapping("/test")
-    fun getAllTestDto(
-    ): ResponseEntity<List<TestDto>> {
-        val response = tests
-        return ResponseEntity.ok().body(response)
+    @PostMapping("/generate")
+    fun generateNumbers(): LottoNumbers {
+        val randomNumbers = (1..45).toList().shuffled().take(7)
+        return LottoNumbers(randomNumbers)
     }
 
-    @GetMapping("/test/{age}")
-    fun getTestDto(
-        @PathVariable("age") userAge: Int
-    ): ResponseEntity<TestDto> {
-        val response = tests.firstOrNull{it.age == userAge}
-        return ResponseEntity.ok().body(response)
+    @PostMapping("/save")
+    fun saveNumbers(@RequestBody numbers: LottoNumbers) {
+        savedNumbers.add(numbers)
+    }
+
+    @GetMapping("/saved")
+    fun getSavedNumbers(): List<LottoNumbers> {
+        return savedNumbers
+    }
+
+    @PostMapping("/result")
+    fun checkResult(@RequestBody numbers: LottoNumbers): GameResult {
+        val matchedNumbers = numbers.numbers.intersect(winningNumbers.numbers).count()
+        val isBonusMatched = numbers.numbers.contains(winningNumbers.numbers.last())
+        val prize = when {
+            matchedNumbers == 6 -> "1등"
+            matchedNumbers == 5 && isBonusMatched -> "2등"
+            matchedNumbers == 5 -> "3등"
+            matchedNumbers == 4 -> "4등"
+            matchedNumbers == 3 -> "5등"
+            else -> "꽝"
+        }
+        return GameResult(matchedNumbers, isBonusMatched, prize)
     }
 }
